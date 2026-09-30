@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="30초 동안 한국사 객관식 문제를 맞히는 미니게임">
+<title>HISTORY BLITZ — T02</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <header class="topbar">
+    <div>
+      <span class="eyebrow">T02 · 내가 설계한 미니게임</span>
+      <h1>🏛️ HISTORY BLITZ</h1>
+      <p class="subtitle">30초 동안 한국사 문제를 최대한 많이 맞혀 보세요.</p>
+    </div>
+    <div class="actions">
+      <button id="pauseBtn" class="secondary">일시정지</button>
+      <button id="settingsBtn" class="secondary">설정</button>
+    </div>
+  </header>
+
+  <section class="game-card">
+    <div class="hud">
+      <div><span>점수</span><strong id="score">0</strong></div>
+      <div><span>문제</span><strong id="questionNo">0</strong></div>
+      <div><span>남은 시간</span><strong id="time">30.0s</strong></div>
+      <div><span>최고 점수</span><strong id="best">0</strong></div>
+    </div>
+
+    <div id="quiz" class="quiz" tabindex="0" aria-label="역사 퀴즈">
+      <div class="quiz-head">
+        <span class="category">한국사 · 객관식</span>
+        <span id="feedback" class="feedback" aria-live="polite"></span>
+      </div>
+
+      <article class="question-card">
+        <div class="question-meta">Q<span id="qIndex">1</span></div>
+        <h2 id="question">게임을 시작하세요.</h2>
+        <div id="answers" class="answers"></div>
+      </article>
+
+      <div class="tip">
+        <span><b>1~4</b> 키로 보기 선택</span>
+        <span>마우스/터치도 가능</span>
+        <span>정답을 고르면 바로 다음 문제로 이동</span>
+      </div>
+
+      <div id="overlay" class="overlay">
+        <div class="overlay-box">
+          <div class="eyebrow">HISTORY BLITZ</div>
+          <h2 id="overlayTitle">역사 퀴즈를 시작하세요</h2>
+          <p id="overlayCopy">30초 안에 최대한 많은 문제를 맞히세요.</p>
+          <button id="startBtn" class="primary">게임 시작</button>
+          <button id="continueBtn" class="primary hidden">재개</button>
+          <button id="restartBtn" class="primary hidden">다시 시작</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-grid">
+    <article class="info-card">
+      <h2>게임 규칙</h2>
+      <p>문제가 나오면 4개의 보기 중 하나를 선택합니다. 맞히면 점수 +1, 틀리면 점수 변화 없이 다음 문제로 넘어갑니다.</p>
+      <p class="muted">문항은 매 판 섞이며 같은 문제의 연속 출제를 방지합니다.</p>
+    </article>
+    <article class="info-card">
+      <h2>현재 난이도</h2>
+      <p><b id="difficultyLabel">NORMAL</b> · 문제 제한시간 <b id="limitLabel">30초</b></p>
+      <p class="muted">T02 비교 실험에서는 difficultyMode 하나만 변경하도록 설계했습니다.</p>
+      <button id="resetSaveBtn" class="text-btn">최고 점수 초기화</button>
+    </article>
+  </section>
+</main>
+
+<dialog id="settingsDialog">
+  <form method="dialog" class="dialog-box">
+    <div class="dialog-head">
+      <h2>설정</h2>
+      <button value="cancel" class="icon-btn">×</button>
+    </div>
+    <label class="switch-row"><span>정답/오답 효과음</span><input id="muteToggle" type="checkbox"></label>
+    <label class="switch-row"><span>움직임 줄이기</span><input id="reducedMotionToggle" type="checkbox"></label>
+    <p class="muted">설정은 브라우저에만 저장됩니다.</p>
+    <button value="ok" class="primary wide">저장</button>
+  </form>
+</dialog>
+
+<script src="game.js"></script>
+</body>
+</html>
