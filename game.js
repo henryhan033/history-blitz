@@ -9,6 +9,8 @@ const DEFAULT_SAVE = {
 
 // T02 난이도 비교에서 바꾸는 값은 하나뿐입니다.
 const DIFFICULTY = {
+  // T02 카드 3: 전후 비교에서는 이 값 하나만 바꿉니다.
+  // "normal" → "hard" 로 변경하면 동일한 게임 규칙에서 어려운 문항 세트만 사용합니다.
   label: "NORMAL",
   difficultyMode: "normal",
   timeLimit: 30
@@ -33,6 +35,28 @@ const QUESTIONS = [
   {q:"직지를 인쇄한 기술은?", a:["금속 활자","목판 인쇄","석판 인쇄","활판 인쇄"], c:0},
   {q:"조선 시대의 최고 교육 기관인 성균관은 주로 무엇을 교육했는가?", a:["무예","유학","의학","상업"], c:1},
   {q:"독립협회가 활동한 시기의 대표적인 인물은?", a:["서재필","안중근","윤봉길","김구"], c:0}
+];
+
+
+const HARD_QUESTIONS = [
+  {q:"나당전쟁에서 신라가 당군을 크게 격퇴한 대표적 전투는?", a:["황산벌 전투","매소성 전투","살수대첩","귀주대첩"], c:1},
+  {q:"발해의 수도였으며 오경 가운데 중심 역할을 한 도시는?", a:["상경 용천부","동경 용원부","남경 남해부","서경 압록부"], c:0},
+  {q:"고려에서 무신정변이 일어난 해는?", a:["1019년","1170년","1231년","1270년"], c:1},
+  {q:"고려 말 권문세족의 토지 지배를 개혁하기 위해 실시된 제도는?", a:["균역법","과전법","대동법","영정법"], c:1},
+  {q:"조선의 법전인 『경국대전』이 완성·반포된 왕대는?", a:["세조","성종","중종","숙종"], c:1},
+  {q:"무오사화가 일어난 시기의 조선 국왕은?", a:["성종","연산군","중종","명종"], c:1},
+  {q:"대동법이 처음 시행된 지역으로 알려진 곳은?", a:["경기","평안","전라도","함경"], c:0},
+  {q:"영조가 붕당 간 대립을 완화하기 위해 추진한 정치는?", a:["호패법","탕평책","문벌정책","척화정책"], c:1},
+  {q:"정조가 왕권 강화와 학문 진흥을 위해 설치한 기구는?", a:["규장각","비변사","훈련도감","의정부"], c:0},
+  {q:"흥선대원군이 왕권 강화를 위해 대대적으로 정비한 교육 기관은?", a:["서원","향교","성균관","서당"], c:0},
+  {q:"갑신정변이 일어난 해는?", a:["1876년","1882년","1884년","1894년"], c:2},
+  {q:"동학농민운동이 본격적으로 전개된 해는?", a:["1884년","1894년","1904년","1910년"], c:1},
+  {q:"대한제국 선포 이후 추진된 근대화 정책을 무엇이라 하는가?", a:["광무개혁","갑오개혁","을미개혁","통리기무아문"], c:0},
+  {q:"국채보상운동이 시작된 대표적 지역은?", a:["대구","평양","개성","부산"], c:0},
+  {q:"1920년대 민족기업 육성과 국산품 애용을 내세운 운동은?", a:["물산장려운동","신간회운동","브나로드운동","형평운동"], c:0},
+  {q:"1940년 충칭에서 조직된 한국광복군의 소속은?", a:["대한민국 임시정부","조선총독부","조선인민공화국","한국독립당"], c:0},
+  {q:"제1차 미소공동위원회가 열린 뒤 결렬된 시기의 국제 정세와 가장 관련 깊은 것은?", a:["냉전의 심화","베를린 봉쇄","한국전쟁 종전","중일전쟁 종결"], c:0},
+  {q:"1960년 4월 학생과 시민의 시위가 확산된 사건은?", a:["6월 민주항쟁","4·19 혁명","부마민주항쟁","5·18 민주화운동"], c:1}
 ];
 
 const quiz = document.querySelector("#quiz");
@@ -96,8 +120,9 @@ function updateHud() {
   scoreEl.textContent = score;
   questionNoEl.textContent = questionCount;
   bestEl.textContent = save.best;
-  qIndex.textContent = Math.min(questionCount + 1, QUESTIONS.length);
-  document.querySelector("#difficultyLabel").textContent = DIFFICULTY.label;
+  qIndex.textContent = questionCount + 1;
+  document.querySelector("#difficultyLabel").textContent =
+    `${DIFFICULTY.label} (${DIFFICULTY.difficultyMode})`;
   document.querySelector("#limitLabel").textContent = `${DIFFICULTY.timeLimit}초`;
 }
 function showOverlay(title, copy, mode) {
@@ -110,8 +135,11 @@ function showOverlay(title, copy, mode) {
 }
 function hideOverlay() { overlay.classList.add("hidden"); }
 
+function getQuestionBank() {
+  return DIFFICULTY.difficultyMode === "hard" ? HARD_QUESTIONS : QUESTIONS;
+}
 function shuffledQuestions() {
-  const arr = QUESTIONS.map((_, i) => i);
+  const arr = getQuestionBank().map((_, i) => i);
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -146,7 +174,6 @@ function finishGame() {
   }
   updateHud();
   showOverlay("시간 종료!", `30초 동안 ${questionCount}문제를 풀어 ${score}점을 얻었습니다.`, "restart");
-  beep(740, .08);
 }
 let lastTick = 0;
 function tick(now) {
@@ -173,7 +200,9 @@ function resumeGame() {
   quiz.focus();
 }
 function renderQuestion() {
-  const q = QUESTIONS[order[current % order.length]];
+  const bank = getQuestionBank();
+  if (!order.length) order = shuffledQuestions();
+  const q = bank[order[current % order.length]];
   question.textContent = q.q;
   answers.replaceChildren();
   q.a.forEach((text, idx) => {
@@ -189,7 +218,8 @@ function renderQuestion() {
 function answer(selected) {
   if (state !== "playing" || answering) return;
   answering = true;
-  const q = QUESTIONS[order[current % order.length]];
+  const bank = getQuestionBank();
+  const q = bank[order[current % order.length]];
   const buttons = [...answers.querySelectorAll(".answer")];
   buttons.forEach(b => b.disabled = true);
   const correct = selected === q.c;
@@ -199,6 +229,7 @@ function answer(selected) {
     feedback.className = "feedback good";
     buttons[selected].style.borderColor = "var(--good)";
     buttons[selected].style.background = "rgba(85,214,139,.13)";
+    // T02 카드 5에서 선언한 단일 효과 사건: "정답".
     beep(880, .08);
   } else {
     feedback.textContent = `오답 · 정답은 ${q.a[q.c]}`;
@@ -207,7 +238,6 @@ function answer(selected) {
     buttons[selected].style.background = "rgba(255,104,123,.13)";
     buttons[q.c].style.borderColor = "var(--good)";
     buttons[q.c].style.background = "rgba(85,214,139,.13)";
-    beep(230, .08);
   }
   questionCount += 1;
   updateHud();

@@ -54,4 +54,4 @@ dialog{border:0;background:transparent;padding:0;color:var(--text)}dialog::backd
  .app{width:min(100% - 18px,1050px);padding-top:18px}.topbar{flex-direction:column}.actions{width:100%}.actions button{flex:1}
  .hud{grid-template-columns:repeat(2,1fr)}.quiz{min-height:650px;padding:16px}.answers{grid-template-columns:1fr}.info-grid{grid-template-columns:1fr}
 }
-@media(max-width:480px){.quiz-card h2{font-size:22px}.answer{min-height:68px}}
+@media(max-width:480px){.question-card h2{font-size:22px}.answer{min-height:68px}}
